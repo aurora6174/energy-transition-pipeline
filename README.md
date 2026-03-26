@@ -3,8 +3,9 @@
 
 > *"In 2000, only 15.5% of Denmark's electricity was renewable. Today it's 91.2% — a gain of 75.7 percentage points, making Denmark the world's fastest energy transition country since 2000."*
 
-> *This pipeline ingests, transforms, and analyses energy data for 200+ countries from 1900–2026 to uncover stories like this — and rank every country's progress in the global race to renewables.*
+> *Meanwhile in Africa: DR Congo and Ethiopia already run on 100% renewable electricity. Kenya hits 89.8%. The energy transition story is far more surprising than the headlines suggest.*
 
+> *This pipeline ingests, transforms, and analyses energy data for 200+ countries from 1900–2026 — built with Bruin and visualised with Evidence.dev — to uncover stories like these and rank every country's progress in the global race to renewables.*
 
 ---
 
@@ -19,7 +20,6 @@
 ---
 
 ## 🗺️ Architecture
-
 ```
 Kaggle CSV (owid-energy-data.csv)
          │
@@ -30,21 +30,27 @@ Kaggle CSV (owid-energy-data.csv)
 └─────────┬───────────┘
           │
           ▼
-┌─────────────────────┐
-│  staging.stg_energy  │  ← Cleaned, typed, 6 quality checks
-│  (DuckDB)            │
-└──────┬──────────────┘
-       │        │                    │
-       ▼        ▼                    ▼
-┌──────────┐ ┌──────────────┐ ┌────────────────┐
-│  mart.    │ │    mart.     │ │     mart.      │
-│ country_  │ │   global_   │ │  top_renewables│
-│  energy_  │ │   summary   │ │                │
-│  trends   │ │             │ │                │
-└──────────┘ └──────────────┘ └────────────────┘
+┌─────────────────────---------------------------
+│  staging.stg_energy                             │   Cleaned, typed, 6 quality checks ← 
+│  (DuckDB)                                       │
+└──┬────────────┬────---------------------------  ┘
+   │            │              │                │
+   ▼            ▼              ▼                ▼
+┌────────┐ ┌──────────┐ ┌────────────┐ ┌──────────────┐
+│ mart.  │ │  mart.   │ │   mart.    │ │    mart.     │
+│country_│ │ global_  │ │   top_     │ │   africa_    │
+│energy_ │ │ summary  │ │ renewables │ │   energy     │
+│trends  │ │          │ │            │ │ 35 countries │
+└────────┘ └──────────┘ └────────────┘ └──────────────┘
+                    │
+                    ▼
+        ┌───────────────────────┐
+        │   Evidence.dev        │  ← Interactive dashboard
+        │   Dashboard           │     Charts + DataTables
+        └───────────────────────┘
 ```
 
-**Total: 5 assets · 42 quality checks · All passing ✅**
+**Total: 6 assets · 54 quality checks · All passing ✅**
 
 ---
 
@@ -53,8 +59,8 @@ Kaggle CSV (owid-energy-data.csv)
 ### Pipeline Lineage
 ![Pipeline Lineage](screenshots/Pipeline%20Lineage.png)
 
-### Full Pipeline Run
-![Full Pipeline Run](screenshots/Full%20Pipeline%20Run%20-%2042%20checks%20passing.png)
+### Full Bruin Pipeline Run
+![Full Pipeline Run](screenshots/Full%20Pipeline%20Run%20Bruin.png)
 
 ### AI Enhancement Output
 ![Mart Country Energy Trends](screenshots/AI%20Enhancement%20-%20Mart%20Country%20Energy%20Trends.png)
@@ -68,16 +74,30 @@ Kaggle CSV (owid-energy-data.csv)
 ![Renewables Leaderboard](screenshots/Renewables%20Leaderboard.png)
 
 
+## Data Visualization with Evidence.dev
+
+### Global Energy Transition
+![Global Energy Transition 1900 - 2026](screenshots/Global%20Energy%20Transition%201900%20-2026.png)
+
+### Solar and Wind Explosion (2000 - 2025)
+![Solar and Wind Explosion](screenshots/Solar%20and%20Wind%20Explosion.png)
+
+### Top Renewable Transition Leaders since 2000
+![Top Renewable Leaders Since 2000](screenshots/Top%20Renewable%20Transion%20Leaders%20Since%202000.png)
+
+### Africa Energy Snapshot 2023
+![Africa Energy Snapshot 2023](screenshots/Africa%20Energy%20Snapshot.png)
+
 ## 🛠️ Tech Stack
 
 | Tool | Role |
 |------|------|
 | [Bruin](https://getbruin.com) | Ingestion + Transformation + Orchestration + AI Analysis |
 | DuckDB | Local analytical database |
+| [Evidence.dev](https://evidence.dev) | Interactive data dashboard |
 | Our World in Data | Energy dataset (1900–2026, 200+ countries) |
 | Git + GitHub | Version control |
 
----
 
 ## 📦 Dataset
 
@@ -102,19 +122,21 @@ Cleans and standardises the raw data:
 - Filters to valid year range (1900–2026)
 - Applies 6 quality checks including custom checks for percentage validity and row count
 
-### Layer 3 — Mart (3 tables)
+
+### Layer 3 — Mart (4 tables)
 
 | Table | Description |
 |-------|-------------|
 | `mart.country_energy_trends` | Full time-series per country with YoY renewable growth and decade grouping |
 | `mart.global_summary` | Global aggregates by year — total energy, solar/wind/hydro/nuclear TWh, avg CO2 intensity |
 | `mart.top_renewables` | Leaderboard of countries ranked by renewable transition gain since 2000 |
+| `mart.africa_energy` | 35 African countries from 1990–2026 — reveals Africa's surprising renewable leaders |
 
 ---
 
 ## ✅ Data Quality
 
-**42 quality checks — all passing**, including:
+**54 quality checks — all passing**, including:
 
 - Column-level: `not_null`, `non_negative`, `positive` on key metrics
 - Custom checks: percentage validity (0–100%), no future years, minimum row counts
@@ -164,8 +186,8 @@ bruin run
 
 Expected output:
 ```
-✓ Assets executed      5 succeeded
-✓ Quality checks       42 succeeded
+✓ Assets executed      6 succeeded
+✓ Quality checks       54 succeeded
 ```
 
 ### 5. Query the results
@@ -209,25 +231,37 @@ bruin query --connection duckdb-default --query \
 
 ## 📁 Project Structure
 
-```
+\```
 bruin-zoomcamp/
-└── bruin/
-    ├── .bruin.yml                          ← DuckDB connection config
-    └── energy-transition-pipeline/
-        ├── pipeline.yml                    ← Schedule & defaults
-        ├── seeds/
-        │   └── owid-energy-data.csv        ← Source dataset
-        └── assets/
-            ├── raw/
-            │   └── raw_energy.asset.yml    ← Seed ingestion asset
-            ├── staging/
-            │   └── stg_energy.sql          ← Cleaning & typing
-            └── mart/
-                ├── mart_country_energy_trends.sql
-                ├── mart_global_summary.sql
-                └── mart_top_renewables.sql
-```
-
+├── README.md                          ← You are here
+├── .gitignore
+├── screenshots/                       ← Dashboard & pipeline screenshots
+├── bruin/
+│   ├── .bruin.yml                     ← DuckDB connection config
+│   └── energy-transition-pipeline/
+│       ├── pipeline.yml               ← Schedule & orchestration
+│       ├── seeds/
+│       │   └── owid-energy-data.csv   ← Source dataset (download from Kaggle)
+│       └── assets/
+│           ├── raw/
+│           │   └── raw_energy.asset.yml        ← Seed ingestion
+│           ├── staging/
+│           │   └── stg_energy.sql              ← Cleaning & typing
+│           └── mart/
+│               ├── mart_country_energy_trends.sql  ← Global trends
+│               ├── mart_global_summary.sql         ← Global aggregates
+│               ├── mart_top_renewables.sql          ← Transition leaderboard
+│               └── mart_africa_energy.sql           ← Africa spotlight
+└── evidence-dashboard/                ← Interactive dashboard
+    ├── pages/
+    │   └── index.md                   ← Dashboard page
+    └── sources/
+        └── energy/                    ← DuckDB source queries
+            ├── connection.yaml
+            ├── global_summary.sql
+            ├── top_renewables.sql
+            └── africa_energy.sql
+\```
 ---
 
 ## 🔗 Resources

@@ -1,0 +1,1 @@
+SELECT * FROM mart.top_renewables ORDER BY transition_gain_pct DESC

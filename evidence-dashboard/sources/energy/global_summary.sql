@@ -1,0 +1,1 @@
+SELECT * FROM mart.global_summary ORDER BY year

@@ -19,3 +19,28 @@ __pycache__/
 # Dataset files (download from Kaggle)
 bruin/energy-transition-pipeline/seeds/*.csv
 bruin/energy-transition-pipeline/seeds/*.zip
+.bruin.yml
+logs/runs
+logs/*.log
+*.py[cod]
+logs/queries
+
+# Prevent accidental root bruin config
+.bruin.yml
+
+
+# Evidence.dev
+evidence-dashboard/node_modules/
+evidence-dashboard/.evidence/
+evidence-dashboard/build/
+
+# Logs
+logs/
+bruin/logs/
+
+# DuckDB files (generated locally)
+*.duckdb
+*.duckdb.wal
+
+# Evidence generated files
+evidence-dashboard/sources/energy/energy.duckdb

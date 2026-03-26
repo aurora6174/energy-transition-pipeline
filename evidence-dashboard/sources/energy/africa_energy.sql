@@ -1,0 +1,1 @@
+SELECT * FROM mart.africa_energy ORDER BY country, year
