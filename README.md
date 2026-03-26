@@ -57,7 +57,7 @@ Kaggle CSV (owid-energy-data.csv)
 ## Pipeline Screenshots
 
 ### Pipeline Lineage
-![Pipeline Lineage](screenshots/Full%20Pipeline%20Run%20Bruin.png)
+![Pipeline Lineage](screenshots/Updated%20Pipeline%20Lineage.png)
 
 ### Full Bruin Pipeline Run
 ![Full Pipeline Run](screenshots/Full%20Pipeline%20Run%20Bruin.png)
@@ -230,38 +230,48 @@ bruin query --connection duckdb-default --query \
 ---
 
 ## 📁 Project Structure
-
-\```
+```
 bruin-zoomcamp/
-├── README.md                          ← You are here
+├── README.md
 ├── .gitignore
-├── screenshots/                       ← Dashboard & pipeline screenshots
+├── screenshots/
 ├── bruin/
-│   ├── .bruin.yml                     ← DuckDB connection config
+│   ├── .bruin.yml
 │   └── energy-transition-pipeline/
-│       ├── pipeline.yml               ← Schedule & orchestration
+│       ├── pipeline.yml
 │       ├── seeds/
-│       │   └── owid-energy-data.csv   ← Source dataset (download from Kaggle)
+│       │   └── owid-energy-data.csv
 │       └── assets/
 │           ├── raw/
-│           │   └── raw_energy.asset.yml        ← Seed ingestion
+│           │   └── raw_energy.asset.yml
 │           ├── staging/
-│           │   └── stg_energy.sql              ← Cleaning & typing
+│           │   └── stg_energy.sql
 │           └── mart/
-│               ├── mart_country_energy_trends.sql  ← Global trends
-│               ├── mart_global_summary.sql         ← Global aggregates
-│               ├── mart_top_renewables.sql          ← Transition leaderboard
-│               └── mart_africa_energy.sql           ← Africa spotlight
-└── evidence-dashboard/                ← Interactive dashboard
+│               ├── mart_country_energy_trends.sql
+│               ├── mart_global_summary.sql
+│               ├── mart_top_renewables.sql
+│               └── mart_africa_energy.sql
+└── evidence-dashboard/
     ├── pages/
-    │   └── index.md                   ← Dashboard page
+    │   └── index.md
     └── sources/
-        └── energy/                    ← DuckDB source queries
+        └── energy/
             ├── connection.yaml
             ├── global_summary.sql
             ├── top_renewables.sql
             └── africa_energy.sql
-\```
+```
+
+| File/Folder | Description |
+|-------------|-------------|
+| `bruin/.bruin.yml` | DuckDB connection config |
+| `pipeline.yml` | Schedule & orchestration |
+| `seeds/owid-energy-data.csv` | Source dataset (download from Kaggle) |
+| `assets/raw/` | Seed ingestion asset |
+| `assets/staging/` | Cleaning & type casting |
+| `assets/mart/` | 4 analytics-ready tables |
+| `evidence-dashboard/` | Interactive Evidence.dev dashboard |
+| `screenshots/` | Pipeline & dashboard screenshots |
 ---
 
 ## 🔗 Resources
