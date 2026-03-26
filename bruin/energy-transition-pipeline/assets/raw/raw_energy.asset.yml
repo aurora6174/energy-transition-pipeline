@@ -1,0 +1,5 @@
+name: raw.global_energy
+type: duckdb.seed
+
+parameters:
+  path: "../../seeds/owid-energy-data.csv"

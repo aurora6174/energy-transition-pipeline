@@ -1,0 +1,21 @@
+# DuckDB database files
+*.duckdb
+*.duckdb.wal
+
+# Bruin logs
+bruin/logs/
+
+# Bruin internal
+bruin/.git/
+
+# Claude skills
+.claude/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Dataset files (download from Kaggle)
+bruin/energy-transition-pipeline/seeds/*.csv
+bruin/energy-transition-pipeline/seeds/*.zip
