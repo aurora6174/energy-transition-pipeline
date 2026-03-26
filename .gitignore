@@ -44,3 +44,6 @@ bruin/logs/
 
 # Evidence generated files
 evidence-dashboard/sources/energy/energy.duckdb
+
+# Prevent rogue Bruin config at root
+.bruin.yml

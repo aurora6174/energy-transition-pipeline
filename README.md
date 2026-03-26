@@ -57,7 +57,7 @@ Kaggle CSV (owid-energy-data.csv)
 ## Pipeline Screenshots
 
 ### Pipeline Lineage
-![Pipeline Lineage](screenshots/Pipeline%20Lineage.png)
+![Pipeline Lineage](screenshots/Full%20Pipeline%20Run%20Bruin.png)
 
 ### Full Bruin Pipeline Run
 ![Full Pipeline Run](screenshots/Full%20Pipeline%20Run%20Bruin.png)
