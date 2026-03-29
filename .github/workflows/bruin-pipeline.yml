@@ -26,12 +26,20 @@ jobs:
       - name: Verify Bruin installation
         run: bruin --version
 
-      - name: Validate pipeline
+      - name: Validate SQL assets
         run: |
           cd bruin
-          bruin validate energy-transition-pipeline \
+          bruin validate energy-transition-pipeline/assets/staging/stg_energy.sql \
             --config-file .bruin.yml
-        
+          bruin validate energy-transition-pipeline/assets/mart/mart_global_summary.sql \
+            --config-file .bruin.yml
+          bruin validate energy-transition-pipeline/assets/mart/mart_top_renewables.sql \
+            --config-file .bruin.yml
+          bruin validate energy-transition-pipeline/assets/mart/mart_africa_energy.sql \
+            --config-file .bruin.yml
+          bruin validate energy-transition-pipeline/assets/mart/mart_country_energy_trends.sql \
+            --config-file .bruin.yml
+
       - name: Show pipeline lineage
         run: |
           cd bruin
@@ -44,13 +52,17 @@ jobs:
   # To run the full pipeline in the cloud:
   #
   # 1. Upload owid-energy-data.csv to a cloud bucket (S3/GCS)
-  #    and update the seed asset path to point to the URL
+  #    and update the seed asset path to point to the URL:
+  #
+  #    parameters:
+  #      path: "https://storage.googleapis.com/your-bucket/owid-energy-data.csv"
   #
   # 2. Replace DuckDB with a cloud warehouse:
   #    - MotherDuck (DuckDB in the cloud) — easiest migration
   #    - BigQuery, Snowflake, or Redshift — enterprise options
   #
   # 3. Store credentials in GitHub Secrets:
+  #    Settings → Secrets → New repository secret
   #    - MOTHERDUCK_TOKEN or cloud warehouse credentials
   #    - Update .bruin.yml to use the cloud connection
   #
