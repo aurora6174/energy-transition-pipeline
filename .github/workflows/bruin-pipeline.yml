@@ -43,8 +43,7 @@ jobs:
       - name: Show pipeline lineage
         run: |
           cd bruin
-          bruin lineage energy-transition-pipeline/assets/staging/stg_energy.sql \
-            --config-file .bruin.yml
+          bruin lineage energy-transition-pipeline/assets/staging/stg_energy.sql
 
   # -------------------------------------------------------
   # PRODUCTION EXTENSION (how to make this fully automated)
