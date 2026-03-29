@@ -80,7 +80,7 @@ Kaggle CSV (owid-energy-data.csv)
 
 
 ## GitHub Actions CI/CD — Green Pipeline
-![GitHub Actions](screenshots/Github%20Actions.png)
+![GitHub Actions](screenshots/Github_Actions.png)
 
 ---
 
