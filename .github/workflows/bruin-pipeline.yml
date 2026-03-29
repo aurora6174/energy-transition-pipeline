@@ -1,0 +1,66 @@
+name: Bruin Energy Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 6 * * *'  # Daily at 6am UTC
+
+jobs:
+  validate-pipeline:
+    name: Validate Bruin Pipeline
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Bruin CLI
+        run: curl -LsSf https://getbruin.com/install/cli | sh
+
+      - name: Add Bruin to PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Verify Bruin installation
+        run: bruin --version
+
+      - name: Validate pipeline
+        run: |
+          cd bruin
+          bruin validate energy-transition-pipeline \
+            --config-file .bruin.yml
+        
+      - name: Show pipeline lineage
+        run: |
+          cd bruin
+          bruin lineage energy-transition-pipeline/assets/staging/stg_energy.sql \
+            --config-file .bruin.yml
+
+  # -------------------------------------------------------
+  # PRODUCTION EXTENSION (how to make this fully automated)
+  # -------------------------------------------------------
+  # To run the full pipeline in the cloud:
+  #
+  # 1. Upload owid-energy-data.csv to a cloud bucket (S3/GCS)
+  #    and update the seed asset path to point to the URL
+  #
+  # 2. Replace DuckDB with a cloud warehouse:
+  #    - MotherDuck (DuckDB in the cloud) — easiest migration
+  #    - BigQuery, Snowflake, or Redshift — enterprise options
+  #
+  # 3. Store credentials in GitHub Secrets:
+  #    - MOTHERDUCK_TOKEN or cloud warehouse credentials
+  #    - Update .bruin.yml to use the cloud connection
+  #
+  # 4. Uncomment the step below:
+  #
+  # - name: Run full pipeline
+  #   env:
+  #     MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
+  #   run: |
+  #     cd bruin
+  #     bruin run energy-transition-pipeline \
+  #       --config-file .bruin.yml
+  # -------------------------------------------------------
